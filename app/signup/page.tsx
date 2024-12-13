@@ -33,6 +33,14 @@ const Login = () => {
                 username: username,
                 password: password,
             }),
+        }).then((res) => {
+            if (res.status === 201) {
+                router.push("/login");
+            } else if (res.status === 409) {
+                setUsernameTakenErr(true);
+            } else {
+                console.log("SERVER ERROR: 500");
+            }
         });
     }
     return (
