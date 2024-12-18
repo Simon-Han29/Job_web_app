@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { UserType } from "@/types/userTypes";
+import jwt from "jsonwebtoken";
 export async function POST(req: Request) {
     try {
         const { username, password } = await req.json();
@@ -13,8 +14,16 @@ export async function POST(req: Request) {
             );
         } else {
             if (userDetails.password === password) {
+                const data = {
+                    username: userDetails.username,
+                    uid: userDetails.uid,
+                };
+                const token = jwt.sign(
+                    data,
+                    process.env.SECRET_KEY || "SECRETKEY"
+                );
                 return NextResponse.json(
-                    { msg: "Login Successful" },
+                    { msg: "Login Successful", token },
                     { status: 201 }
                 );
             } else {

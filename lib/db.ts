@@ -5,6 +5,9 @@ Change the connection string to process.env.DATABASE_URL for production, and bac
 */
 const pool = new Pool({
     // connectionString: process.env.DATABASE_URL,
-    connectionString: "postgresql://postgres:postgres@localhost:5432/JobAppDB",
+    // connectionString: "postgresql://postgres:postgres@localhost:5432/JobAppDB",
+    connectionString:
+        process.env.DATABSE_URL ||
+        "postgresql://postgres:postgres@localhost:5432/JobAppDB",
 });
 export default pool;

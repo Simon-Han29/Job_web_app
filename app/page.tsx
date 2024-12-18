@@ -1,10 +1,8 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import Navbar from "@/components/ui/navbar";
 export default function Home() {
     return (
         <div>
-            <Link href="/login">Login</Link>
-            <Link href="/signup">Signup</Link>
+            <Navbar />
         </div>
     );
 }

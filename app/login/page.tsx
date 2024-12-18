@@ -10,11 +10,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/authContext";
+import { UserDataType } from "@/types/authTypes";
 const Login = () => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [incorrectCredentialsErr, setIncorrectCredentialsErr] =
         useState<boolean>(false);
+
+    const { login } = useAuth();
     const router = useRouter();
     function handleUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
         setUsername(e.target.value.trim());
@@ -35,15 +39,25 @@ const Login = () => {
                 username: username,
                 password: password,
             }),
-        }).then((res) => {
-            if (res.status === 201) {
+        })
+            .then((res) => {
+                if (res.status === 201) {
+                    return res.json();
+                } else if (res.status === 401) {
+                    setIncorrectCredentialsErr(true);
+                    Promise.reject("401: Incorrect credentials");
+                } else {
+                    console.log("SERVER ERROR: 500");
+                    Promise.reject("500: Server error");
+                }
+            })
+            .then((data: UserDataType) => {
+                login(data.token);
                 router.push("/");
-            } else if (res.status === 401) {
-                setIncorrectCredentialsErr(true);
-            } else {
-                console.log("SERVER ERROR: 500");
-            }
-        });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     return (
