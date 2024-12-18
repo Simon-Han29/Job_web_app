@@ -1,9 +1,13 @@
-// lib/db.ts
 import { Pool } from "pg";
 
-// Create a pool of connections to the PostgreSQL database
+/*
+Change the connection string to process.env.DATABASE_URL for production, and back to the hard coded string for local dev
+*/
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL, // Use the environment variable for the database connection string
+    // connectionString: process.env.DATABASE_URL,
+    // connectionString: "postgresql://postgres:postgres@localhost:5432/JobAppDB",
+    connectionString:
+        process.env.DATABSE_URL ||
+        "postgresql://postgres:postgres@localhost:5432/JobAppDB",
 });
-
 export default pool;
