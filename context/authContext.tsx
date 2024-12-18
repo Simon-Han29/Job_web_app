@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, []);
 
     function resetSessionData() {
-        cookies.remove("token", { path: "/" });
+        cookies.remove("token", { path: "/", sameSite: "none", secure: true });
         setUsername("");
         setUid("");
         setIsloggedIn(false);
@@ -50,7 +50,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
             const parts = token.split(".");
             if (parts.length === 3) {
-                cookies.set("token", token, { path: "/" });
+                cookies.set("token", token, {
+                    path: "/",
+                    sameSite: "none",
+                    secure: true,
+                });
                 const decoded: TokenType = jwtDecode(token);
                 setUsername(decoded.username);
                 setUid(decoded.uid);
